@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import {
-  SafeAreaView,
+  FlatList,
+  Pressable,
   StyleSheet,
   Text,
+  TextInput,
   View,
 } from 'react-native';
 
 import { currencyByRupee } from './constants';
+import CurrencyButton from './components/CurrencyButton';
 
 
 function App(): JSX.Element {
@@ -56,11 +59,48 @@ function App(): JSX.Element {
   }
 
   return (
-    <SafeAreaView>
+    <View>
       <View>
-        <Text>Currency Converter</Text>
+        <View>
+          <View>
+            <Text>₹</Text>
+            <TextInput
+              maxLength={14}
+              value={inputValue}
+              clearButtonMode='always' //only for iOS
+              onChangeText={setInputValue}
+              keyboardType='number-pad'
+              placeholder='Enter amount in Rupees'
+              placeholderTextColor="#BCBBBB"
+            />
+          </View>
+          <Pressable onPress={() => handleClick()}>
+            <Text>{action}</Text>
+          </Pressable>
+        </View>
+        <View>
+          {inputValue && resultValue && (
+            <Text>
+              {`₹ ${inputValue} = `}{resultValue}
+            </Text>
+          )}
+        </View>
       </View>
-    </SafeAreaView>
+      <View>
+        <FlatList
+          numColumns={2}
+          data={currencyByRupee}
+          keyExtractor={item => item.name}
+          renderItem={({ item }) => (
+            <Pressable
+              onPress={() => setTargetCurrency(currency => currency === item.name ? "" : item.name)}
+            >
+              <CurrencyButton {...item} />
+            </Pressable>
+          )}
+        />
+      </View>
+    </View >
   );
 }
 
