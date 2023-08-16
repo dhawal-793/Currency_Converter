@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -7,6 +8,11 @@ import {
 
 
 function App(): JSX.Element {
+  const [inputValue, setInputValue] = useState('')
+  const [resultValue, setResultValue] = useState('')
+  const [targetCurrency, setTargetCurrency] = useState('')
+  const [action, setAction] = useState('convert')
+
   return (
     <SafeAreaView>
       <View>
