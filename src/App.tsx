@@ -7,6 +7,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import Snackbar from 'react-native-snackbar';
 
 import { currencyByRupee } from './constants';
 import CurrencyButton from './components/CurrencyButton';
@@ -20,7 +21,11 @@ function App(): JSX.Element {
 
   const buttonPressed = () => {
     if (!inputValue) {
-      // TODO: show snackbar
+      return Snackbar.show({
+        text: "Enter a value to convert",
+        backgroundColor: "#EA7773",
+        textColor: "#000000"
+      })
     }
 
     const targetValue = currencyByRupee.find((item) => item.name === targetCurrency)
@@ -34,11 +39,19 @@ function App(): JSX.Element {
         setTargetCurrency(targetValue.name)
       }
       else {
-        // TODO: show snackbar
+        return Snackbar.show({
+          text: "Not a valid number to convert",
+          backgroundColor: "#F4BE2C",
+          textColor: "#000000"
+        })
       }
     }
     else {
-      // TODO: show snackbar
+      return Snackbar.show({
+        text: "Choose a currency to convert",
+        backgroundColor: "#EA7773",
+        textColor: "#000000"
+      })
     }
   }
   const handleClick = () => {
