@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   FlatList,
   Pressable,
@@ -19,7 +19,7 @@ function App(): JSX.Element {
   const [targetCurrency, setTargetCurrency] = useState('')
   const [action, setAction] = useState('convert')
 
-  const buttonPressed = () => {
+  const convertCurrency = () => {
     if (!inputValue) {
       return Snackbar.show({
         text: "Enter a value to convert",
@@ -56,7 +56,7 @@ function App(): JSX.Element {
   }
   const handleClick = () => {
     if (action === "convert") {
-      buttonPressed()
+      convertCurrency()
       if ((inputValue && targetCurrency) || resultValue)
         setAction("reset")
     } else {
@@ -64,12 +64,17 @@ function App(): JSX.Element {
       setAction("convert")
     }
   }
-
   const reset = () => {
     setInputValue('')
     setResultValue('')
     setTargetCurrency('')
   }
+
+  useEffect(() => {
+    if (action === "reset" && inputValue && targetCurrency) {
+      convertCurrency();
+    }
+  }, [targetCurrency, inputValue])
 
   return (
     <View style={styles.container}>
@@ -90,9 +95,9 @@ function App(): JSX.Element {
           </View>
           <Pressable
             onPress={() => handleClick()}
-            style={styles.button}
+            style={[styles.button, { borderColor: action === "convert" ? "#54A051" : "#E4583F" }]}
           >
-            <Text style={styles.buttonText}>{action}</Text>
+            <Text style={[styles.buttonText, { color: action === "convert" ? "#54A051" : "#E4583F" }]}>{action}</Text>
           </Pressable>
         </View>
         <View style={styles.resultContainer}>
@@ -111,8 +116,8 @@ function App(): JSX.Element {
           renderItem={({ item }) => (
             <Pressable
               style={[
-                styles.card,
-                targetCurrency === item.name && styles.selected
+                styles.currencyCard,
+                targetCurrency === item.name && styles.selectedCard
               ]}
               onPress={() => setTargetCurrency(currency => currency === item.name ? "" : item.name)}
             >
@@ -166,18 +171,19 @@ const styles = StyleSheet.create({
     height: 40,
     fontWeight: '600',
     color: '#000000',
+    width: '90%',
   },
   button: {
     flexDirection: 'row',
     backgroundColor: '#FFFFFF',
     alignItems: 'center',
+    justifyContent: 'center',
     borderRadius: 8,
+    borderWidth: 2,
     height: 40,
     width: 80,
-    justifyContent: 'center',
   },
   buttonText: {
-    color: '#000000',
     fontSize: 16,
     fontWeight: '600',
   },
@@ -199,15 +205,15 @@ const styles = StyleSheet.create({
     flex: 2,
     paddingHorizontal: 30,
   },
-  card: {
+  currencyCard: {
     flex: 1,
     margin: 12,
     height: 80,
     borderRadius: 12,
     backgroundColor: '#ffffff',
   },
-  selected: {
-    backgroundColor: '#ffeaa7',
+  selectedCard: {
+    backgroundColor: '#58C92D',
   },
 });
 
